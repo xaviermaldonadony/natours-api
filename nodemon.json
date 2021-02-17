@@ -1,0 +1,7 @@
+{
+  "events": {
+    "restart": "kill-port $(lsof -t -i:3000)",
+    "crash": "kill-port $(lsof -t -i:3000)"
+  },
+ "delay": "1500"
+}
