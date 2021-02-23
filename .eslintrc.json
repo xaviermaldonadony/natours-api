@@ -3,7 +3,7 @@
   "root": true,
   "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": "error",
+    "prettier/prettier": "off",
     "spaced-comment": "off",
     "no-console": "off",
     "consistent-return": "off",
@@ -14,10 +14,8 @@
     "no-return-await": "off",
     "no-underscore-dangle": "off",
     "class-methods-use-this": "off",
-    "singleQuote": true,
-    "tabWidth": 2,
-    "useTabs": false,
     "prefer-destructuring": ["error", { "object": true, "array": false }],
-    "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }]
+    "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }],
+    "arrow-body-style": "off"
   }
 }

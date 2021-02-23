@@ -1,36 +1,45 @@
-const express = require('express');
-const morgan = require('morgan');
+const express = require('express')
+const morgan = require('morgan')
 
-const tourRouter = require('./routes/tourRoutes');
-const userRouter = require('./routes/userRoutes');
+const AppError = require('./utils/AppError')
+const globalErroHandler = require('./controllers/errorController')
+const tourRouter = require('./routes/tourRoutes')
+const userRouter = require('./routes/userRoutes')
 
-const app = express();
+const app = express()
 
 // MIDDLEWARE
 // this middleware (global) before all route handlers
 if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+  app.use(morgan('dev'))
 }
-app.use(express.json());
-app.use(express.static(`${__dirname}/public`));
+app.use(express.json())
+app.use(express.static(`${__dirname}/public`))
 
 //  applies to each and every single request
 // becuase we didn't specify a route
-app.use((re, res, next) => {
-  console.log('Hello from the middleware ');
-  next();
-});
-
 app.use((req, res, next) => {
-  req.requestTime = new Date().toISOString();
-  next();
-});
+  req.requestTime = new Date().toISOString()
+  next()
+})
 
 // MOUNT ROUTES
-app.use('/api/v1/tours', tourRouter);
-app.use('/api/v1/users', userRouter);
+app.use('/api/v1/tours', tourRouter)
+app.use('/api/v1/users', userRouter)
 
-// 4 START SERVER
+// middleware, catches any other route not handled
+app.all('*', (req, res, next) => {
+  const message = `Cant find ${req.originalUrl} on this server`
+  // to reach the error
+  // if the next func receives an argument, express will automatically known its an error
+  // skips all other middleware in the stack and sends the error to global error handling middleware
+  next(new AppError(message, 404))
+})
 
-module.exports = app;
-//8 24
+// err handling middleware
+// 4 arguments, express will know its an error
+app.use(globalErroHandler)
+
+module.exports = app
+
+// 10 2
