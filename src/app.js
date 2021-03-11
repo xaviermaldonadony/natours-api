@@ -10,6 +10,7 @@ const AppError = require('./utils/AppError');
 const globalErroHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 
 const app = express();
 
@@ -74,6 +75,7 @@ app.use((req, res, next) => {
 // MOUNT ROUTES
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 // middleware, catches any other route not handled
 app.all('*', (req, res, next) => {
@@ -90,7 +92,8 @@ app.use(globalErroHandler);
 
 module.exports = app;
 
-//  10 22
+//  11 24
+// 5 16
 
 // JWT stateless, no state is left in the server so the server does not know the users logged in
 // a user is logged in as soon as he gets back his unique valid jwt, which is not saved in the sever

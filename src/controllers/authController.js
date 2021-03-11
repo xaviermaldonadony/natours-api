@@ -115,6 +115,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     // roles ['admin', 'lead-guide'] role='user' it goes in if
+
     if (!roles.includes(req.user.role)) {
       // 403 forbidden
       return next(
@@ -164,14 +165,12 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     await user.save({ validateBeforeSave: false });
     errMessage = 'There was an error sending the email. Try again later!';
-    console.log('try catch');
 
     return next(AppError(errMessage, 500));
   }
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
-  console.log('RESETPASSWORD');
   const message = 'Token is invalid or has expired';
 
   // 1) Get user based on the token
@@ -220,9 +219,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
   // validation then gets done by the schema validator
-  console.log('before save');
   await user.save();
-  console.log('after save');
   // if we use find findByIdAndUpdate, our validators and  pre save middle ware wont work
 
   // 4) Log user in, send JWT
