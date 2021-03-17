@@ -48,33 +48,62 @@ const handlerErrors = (err) => {
   return err;
 };
 
-const sendErroDev = (err, res) => {
-  // console.log('ERROR DEV---------------', err)
-  res.status(err.statusCode).json({
-    stastus: err.status,
-    errors: err,
-    message: err.message,
-    stack: err.stack,
+const sendErrorDev = (err, req, res) => {
+  // A case API
+  if (req.originalUrl.startsWith('/api')) {
+    return res.status(err.statusCode).json({
+      stastus: err.status,
+      errors: err,
+      message: err.message,
+      stack: err.stack,
+    });
+  }
+
+  // B case Rendered website
+  console.error('ERROR ------------------------', err);
+  return res.status(err.statusCode).render('error', {
+    title: 'Something went wrong!',
+    msg: err.message,
   });
 };
 
-const sendErroProd = (err, res) => {
-  // operational, trusted error show to client
-  if (err.isOperational) {
-    res.status(err.statusCode).json({
-      stastus: err.status,
-      message: err.message,
-    });
-  } else {
+const sendErrorProd = (err, req, res) => {
+  //A API
+  if (req.originalUrl.startsWith('/api')) {
+    // A case Operational, trusted error show to client
+    if (err.isOperational) {
+      return res.status(err.statusCode).json({
+        stastus: err.status,
+        message: err.message,
+      });
+    }
+
     // log to console
     console.error('ERROR ------------------------', err);
-    // Programming or unkown error, don't leak details
+    // B case, Programming or unkown error, don't leak details
     // generic error
-    res.status(500).json({
-      status: 'error',
-      message: 'Something went very wrong',
+    return res
+      .status(500)
+      .json({ status: 'error', message: 'Something went very wrong' });
+  }
+
+  //B Rendered website
+  // A case Operational, trusted error show to client
+  if (err.isOperational) {
+    return res.status(err.statusCode).render('error', {
+      title: 'Something went wrong!',
+      msg: err.message,
     });
   }
+
+  // log to console
+  console.error('ERROR ------------------------', err);
+  // B Programming or unkown error, don't leak details
+  // generic error
+  return res.status(err.statusCode).render('error', {
+    title: 'Something went wrong!',
+    msg: 'Please try again later',
+  });
 };
 
 module.exports = (err, req, res, next) => {
@@ -90,10 +119,10 @@ module.exports = (err, req, res, next) => {
     name: err.name,
   };
   if (process.env.NODE_ENV === 'development') {
-    sendErroDev(err, res);
+    sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
     // checks different erros
     error = handlerErrors(error);
-    sendErroProd(error, res);
+    sendErrorProd(error, req, res);
   }
 };

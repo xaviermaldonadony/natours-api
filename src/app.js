@@ -1,22 +1,31 @@
 const express = require('express');
+const path = require('path');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cookieParser = require('cookie-parser');
 
 const AppError = require('./utils/AppError');
 const globalErroHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const viewRouter = require('./routes/viewRoutes');
 
 const app = express();
 
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
 // GLOBAL MIDDLEWARE
+//  Serving static files
+app.use(express.static(path.join(__dirname, 'public')));
 // Set security HTTP headers
-app.use(helmet());
+// app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 
 // development loggin
 if (process.env.NODE_ENV === 'development') {
@@ -32,13 +41,18 @@ const limiter = rateLimit({
 // affects all the routes
 app.use('/api', limiter);
 
-// Bdoy parser, reading data from the body into req.body
+// Body parser, reading data from the body into req.body
 app.use(
   express.json({
     limit: '10kb',
   }),
 );
 
+// lets us parse date coming in from url encoded form
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
+// Parse data from cookie
+app.use(cookieParser());
 // Data sanitization against NoSQL query injection
 // it looks at the request body, req query string and req.params it filters out all of the "$"and "."
 app.use(mongoSanitize());
@@ -62,17 +76,26 @@ app.use(
   }),
 );
 
-//  Serving static files
-app.use(express.static(`${__dirname}/public`));
-
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  // console.log(req.headers)
+  // console.log(req.cookies);
   next();
 });
 
+// app.use((req, res, next) => {
+//   res.setHeader(
+//     'Content-Security-Policy',
+//     "script-src  'self' connect.facebook.net maps.googleapis.com cdnjs.cloudflare.com cdn.quilljs.com *.aws",
+//     "script-src-elem 'self' connect.facebook.net maps.googleapis.com cdnjs.cloudflare.com cdn.quilljs.com *.aws",
+//     "style-src 'self' cdnjs.cloudflare.com; localhost:8000;",
+//     "img-src 'self'",
+//   );
+//   next();
+// });
+
 // MOUNT ROUTES
+app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
@@ -92,7 +115,8 @@ app.use(globalErroHandler);
 
 module.exports = app;
 
-//  11 24
+// 12 24
+
 // 5 16
 
 // JWT stateless, no state is left in the server so the server does not know the users logged in
