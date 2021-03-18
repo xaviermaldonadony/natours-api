@@ -108,3 +108,7 @@ dist
 
 # vscode
 .vscode/*
+
+# parcel, bundle files
+*bundle.js
+*bundle.js.map
