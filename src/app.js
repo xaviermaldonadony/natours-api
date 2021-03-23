@@ -117,12 +117,7 @@ app.use(globalErroHandler);
 
 module.exports = app;
 
-// 12 19
-
-// 5 16
-
-// 21
-// Book 25
+// 13 5
 
 // JWT stateless, no state is left in the server so the server does not know the users logged in
 // a user is logged in as soon as he gets back his unique valid jwt, which is not saved in the sever
