@@ -6,9 +6,9 @@
 
 - Express
 - postman
-- MongoDb
+- MongoDB and Mongoose
+  - Sorting, Filtering, Aggregations, Validators, Limiting
 - Error Handilng
-- models
 - Factory function to abstract similar controller functions
   - create, update, delete, get
 - Pug templates
@@ -21,6 +21,6 @@
 - Rate Limit
 - File Uploads
   - User update / upload photo
-- Tour page includes map Using Mapbox
+- Tour page includes map using Mapbox
 - Book a tour as well as diplaying booked tours
-- Pahyment with Stripe
+- Payment with Stripe

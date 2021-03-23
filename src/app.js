@@ -7,6 +7,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const AppError = require('./utils/AppError');
 const globalErroHandler = require('./controllers/errorController');
@@ -77,10 +78,11 @@ app.use(
   }),
 );
 
+app.use(compression());
+
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  // console.log(req.cookies);
   next();
 });
 
@@ -116,8 +118,6 @@ app.all('*', (req, res, next) => {
 app.use(globalErroHandler);
 
 module.exports = app;
-
-// 13 5
 
 // JWT stateless, no state is left in the server so the server does not know the users logged in
 // a user is logged in as soon as he gets back his unique valid jwt, which is not saved in the sever

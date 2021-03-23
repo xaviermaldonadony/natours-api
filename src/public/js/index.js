@@ -14,7 +14,6 @@ const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const bookBtn = document.getElementById('book-tour');
-console.log(signupForm);
 
 // Delegate
 if (mapBox) {
@@ -56,7 +55,6 @@ if (userDataForm) {
     form.append('email', document.getElementById('email').value);
     form.append('photo', document.getElementById('photo').files[0]);
 
-    console.log(form);
     // axios will recognize form as an object
     updateSettings(form, 'data');
   });

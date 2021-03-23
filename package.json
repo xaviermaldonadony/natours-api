@@ -13,7 +13,7 @@
     "debug": "ndb src/server.js ",
     "dev": "node src/server.js",
     "watch:js": "parcel watch ./src/public/js/index.js --out-dir ./src/public/js --out-file bundle.js --public-url .",
-    "build:js": "parcel watch ./src/public/js/index.js --out-dir ./src/public/js --out-file bundle.js --public-url ."
+    "build:js": "parcel build ./src/public/js/index.js --out-dir ./src/public/js --out-file bundle.js --public-url ."
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +26,7 @@
     "@babel/preset-env": "^7.12.16",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",

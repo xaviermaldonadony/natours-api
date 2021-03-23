@@ -110,8 +110,8 @@ dist
 .vscode/*
 
 # parcel, bundle files
-*bundle.js
-*bundle.js.map
+# *bundle.js
+# *bundle.js.map
 
 #new uploaded picture
 src/public/img/users/user-*
