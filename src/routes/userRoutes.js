@@ -15,7 +15,14 @@ router.use(authController.protect);
 
 router.patch('/updateMypassword', authController.updatePassword);
 router.get('/me', userController.getMe, userController.getUser);
-router.patch('/updateMe', userController.updateMe);
+// photo, is the field that holds the image, field is in the form
+// upload middle ware will put infor on the req object
+router.patch(
+  '/updateMe',
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  userController.updateMe,
+);
 router.delete('/deleteMe', userController.deleteMe);
 
 // routes below are protected and restricted only to admin

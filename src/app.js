@@ -13,6 +13,7 @@ const globalErroHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const bookingRouter = require('./routes/bookingRoutes');
 const viewRouter = require('./routes/viewRoutes');
 
 const app = express();
@@ -99,6 +100,7 @@ app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/bookings', bookingRouter);
 
 // middleware, catches any other route not handled
 app.all('*', (req, res, next) => {
@@ -115,9 +117,12 @@ app.use(globalErroHandler);
 
 module.exports = app;
 
-// 12 24
+// 12 19
 
 // 5 16
+
+// 21
+// Book 25
 
 // JWT stateless, no state is left in the server so the server does not know the users logged in
 // a user is logged in as soon as he gets back his unique valid jwt, which is not saved in the sever
@@ -127,3 +132,9 @@ module.exports = app;
 // all this must happen over https.
 
 // data sanitization, 2 packages
+
+// TO DO
+// review tour that have been actually booked
+// Sign up
+// advanced authentication features: confirm user email, keep users logged in with refresh tokens, two-factor authentication,
+// prevent duplicate booking
