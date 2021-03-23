@@ -3,5 +3,5 @@
     "restart": "npx kill-port 8000",
     "crash": "npx kill-port 8000"
   },
-  "delay": "1800"
+  "delay": "1500"
 }
