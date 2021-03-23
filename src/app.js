@@ -135,6 +135,5 @@ module.exports = app;
 
 // TO DO
 // review tour that have been actually booked
-// Sign up
 // advanced authentication features: confirm user email, keep users logged in with refresh tokens, two-factor authentication,
 // prevent duplicate booking
