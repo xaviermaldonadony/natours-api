@@ -13,20 +13,20 @@ const signToken = (id) =>
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-const createAndSendToken = (user, statusCode, res) => {
+const createAndSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
-  const cookieOptions = {
+  // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  // even if we are in production it does not mean the connection is secure, not all deployments have https
+  // secure jwt in cookie
+  res.cookie('jwt', token, {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
     ), // convert ms
     // cookie will only be sent on an encrypted connection, https
     // can not be access or modified by the browser
     httpOnly: true,
-  };
-
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-  // secure jwt in cookie
-  res.cookie('jwt', token, cookieOptions);
+    secure: req.secure || req.header['x-forwarded-pro'] === 'https',
+  });
   // remove password from the otuput
   user.password = undefined;
 
@@ -46,7 +46,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   // console.log(url);
 
   await new Email(newUser, url).sendWelcome();
-  createAndSendToken(newUser, 201, res);
+  createAndSendToken(newUser, 201, req, res);
 });
 
 // login a user in basically means, to sign a jwt and send it back to the client
@@ -71,7 +71,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // 3) If everything ok, send token to clientF
-  createAndSendToken(user, 200, res);
+  createAndSendToken(user, 200, req, res);
 });
 
 exports.logout = (req, res) => {
@@ -214,7 +214,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   //  pre save middleware runs and changes changedPasswordAt property
 
   // 4) Log the user in, send the JWT
-  createAndSendToken(user, 200, res);
+  createAndSendToken(user, 200, req, res);
 });
 
 // Only for rendered pages, no errors
@@ -269,5 +269,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // if we use find findByIdAndUpdate, our validators and  pre save middle ware wont work
 
   // 4) Log user in, send JWT
-  createAndSendToken(user, 200, res);
+  createAndSendToken(user, 200, req, res);
 });
