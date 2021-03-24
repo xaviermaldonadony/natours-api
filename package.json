@@ -4,8 +4,8 @@
   "description": "nodejs expres and mongoDB",
   "main": "app.js",
   "scripts": {
-    "start-all": "npm-run-all --parallel debug start:dev:debug",
-    "start": "yarn run start:babel && yarn  run start:dev",
+    "start": "node src/server.js",
+    "start-all": "yarn run start:babel && yarn  run start:dev",
     "start:babel": "babel src --out-dir dist",
     "start:dev2": "nodemon --no-warnings dist/server.js --exec babel-node",
     "start:dev": "nodemon  src/server.js",
