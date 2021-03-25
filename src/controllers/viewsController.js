@@ -4,6 +4,16 @@ const User = require('../models/userModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 
+exports.alerts = (req, res, next) => {
+  const { alert } = req.query;
+  if (alert === 'booking') {
+    // somethimes the webhook is called after the succes url is called. There could be the possibility the booking won't show up immedeiately
+    res.locals.alert =
+      "Your booking was succesful! Please check your email for a confirmation. If your booking doesn't  show up here immediately, please come back later.";
+  }
+  next();
+};
+
 exports.getOverview = catchAsync(async (req, res, next) => {
   // 1) Get tour data from collection
   const tours = await Tour.find();
