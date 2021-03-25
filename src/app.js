@@ -8,6 +8,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 
 const AppError = require('./utils/AppError');
 const globalErroHandler = require('./controllers/errorController');
@@ -26,6 +27,22 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // GLOBAL MIDDLEWARE
+// Implement CORS
+app.use(cors());
+// Access-Control-Allow-Origin
+// eg, api.natours.com, FE natours.com
+// app.use(cors({
+//   origin: 'https://www.natours.com'
+// }))
+
+// Non simple requests, put patch delete, req use cookies, req that use non standar headers
+// They require a pre flight phase, the browser first does an option req to figure out if its safe
+// to send. We need to res to that option req. opt is just another http method like get post del....
+// When we get the option req we need to send back the same acces control allow origin header.
+// Then the browser will know is safe to perform and will execute the req that was issued
+
+app.options('*', cors());
+
 //  Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
 // Set security HTTP headers
