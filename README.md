@@ -2,7 +2,7 @@
 
 ## Built an api for a tour page named natours
 
-## Deployed with [heroku](https://mx-https://mx-natours-api.herokuapp.com/)
+## Deployed with [heroku](https://mx-natours-api.herokuapp.com/)
 
 ### Implemented with
 
